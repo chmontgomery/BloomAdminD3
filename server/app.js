@@ -58,10 +58,13 @@ app.configure(function() {
                 return purchase.planYear === planYear;
             }).length > 0;
         });
-        var data = {
-            yes: membersWhoMadePurchases.length/total,
-            no: (total - membersWhoMadePurchases.length)/total
-        };
+        var data = [{
+            age: 'yes',
+            population: membersWhoMadePurchases.length/total
+        }, {
+            age: 'no',
+            population: (total - membersWhoMadePurchases.length)/total
+        }];
         res.json(data);
     });
 });
