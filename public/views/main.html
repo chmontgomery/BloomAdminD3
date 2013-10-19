@@ -1,16 +1,13 @@
 <div class="hero-unit">
-    <h1>{{ planYear }}</h1>
-
+    <h1>{{ planYear }} Stats</h1>
     <h4>Members who finished shopping</h4>
     <div>
         {{ havePurchaseStats }}
     </div>
     <div>
-        <piechart id="d3pie" data="havePurchaseStats"
-                  xaxis-name = ""
-                  xaxis-pos = ""
-                  yaxis-name = ""
-                  yaxis-pos = ""
-                  d3-format= "">
+        <piechart id="d3pie"
+                  data="havePurchaseStats"
+                  width="500"
+                  height="500"></piechart>
     </div>
 </div>

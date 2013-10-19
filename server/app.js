@@ -59,10 +59,10 @@ app.configure(function() {
             }).length > 0;
         });
         var data = [{
-            age: 'yes',
+            type: 'yes',
             population: membersWhoMadePurchases.length/total
         }, {
-            age: 'no',
+            type: 'no',
             population: (total - membersWhoMadePurchases.length)/total
         }];
         res.json(data);

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('BloomAdminD3App', ['AngularD3PieChart'])
+angular.module('BloomAdminD3App', ['common.charts'])
     .config(function ($routeProvider) {
         $routeProvider
             .when('/', {

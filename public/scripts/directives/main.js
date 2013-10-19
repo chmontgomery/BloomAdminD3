@@ -1,21 +1,17 @@
 (function() {
 
-var module = angular.module('AngularD3PieChart', []);
+var module = angular.module('common.charts', []);
 
     module.controller('pieChartCtrl', function($scope) {
         $scope.pieChart = {
             initialize: function(datajson) {
                 this.datajson = datajson;
-
             },
             workOnElement: function(element) {
                 this.element = element;
             },
             generateGraph: function() {
-                //d3 specific coding
-                var width = 500,
-                    height = 500,
-                    radius = Math.min(width, height) / 2;
+                var radius = Math.min($scope.width, $scope.height) / 2;
 
                 var color = d3.scale.ordinal()
                     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
@@ -29,12 +25,11 @@ var module = angular.module('AngularD3PieChart', []);
                     .value(function(d) { return d.population; });
 
                 var svg = d3.select(this.element).append("svg")
-                    .attr("width", width)
-                    .attr("height", height)
+                    .attr("width", $scope.width)
+                    .attr("height", $scope.height)
                     .append("g")
-                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+                    .attr("transform", "translate(" + $scope.width / 2 + "," + $scope.height / 2 + ")");
 
-                //d3.json(this.datajson, function(error, data) {
 
                     this.datajson.forEach(function(d) {
                         d.population = +d.population;
@@ -47,45 +42,40 @@ var module = angular.module('AngularD3PieChart', []);
 
                     g.append("path")
                         .attr("d", arc)
-                        .style("fill", function(d) { return color(d.data.age); });
+                        .style("fill", function(d) { return color(d.data.type); });
 
                     g.append("text")
                         .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
                         .attr("dy", ".35em")
                         .style("text-anchor", "middle")
-                        .text(function(d) { return d.data.age; });
-                //}.bind(this));
+                        .text(function(d) { return d.data.type; });
             }
         };
     });
 
-    module.directive('piechart', function () { // Angular Directive
+    module.directive('piechart', function () {
         return {
-            restrict: 'E', // Directive Scope is Element
-            replace: true, // replace original markup with template
-            transclude: false, // not to copy original HTML DOM
+            restrict: 'E',
+            replace: true,
+            transclude: false,
             scope: {
-                data: '='
+                data: '=',
+                width: '=',
+                height: '='
             },
             controller: 'pieChartCtrl',
-            link: function postLink(scope, iElement, iAttrs, controller) {// the compilation of DOM is done here.
-
+            link: function postLink(scope, iElement, iAttrs, controller) {
                 scope.$watch('data', function(newValue, oldValue) {
                     if (newValue) {
-                        // It is responsible for produce HTML DOM or it returns a combined link function
-                        // Further Docuumentation on this - http://docs.angularjs.org/guide/directive
-                        console.log(iAttrs.id);
-                        console.log(scope.data);
+                        console.log(iAttrs.id + ' data:', scope.data);
                         var html = "<div id='" + iAttrs.id + "' ></div>"; // the HTML to be produced
                         var newElem = $(html);
                         iElement.replaceWith(newElem); // Replacement of the element.
                         scope.pieChart.initialize(newValue);
                         scope.pieChart.workOnElement('#'+iAttrs.id);
-                        // Work on particular element
                         scope.pieChart.generateGraph();  // generate the actual bar graph
                     }
-                })
-
+                });
             }
         }
     });
