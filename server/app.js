@@ -67,6 +67,22 @@ app.configure(function() {
         }];
         res.json(data);
     });
+
+    app.get('/members', function(req, res) {
+        //TODO
+        var members = [{
+            firstName: 'Chris',
+            lastName: 'Montgomery',
+            bloomId: '12345',
+            finishedShopping: false
+        },{
+            firstName: 'Adan',
+            lastName: 'Perez',
+            bloomId: '65453',
+            finishedShopping: true
+        }];
+        res.json(members);
+    });
 });
 
 var server = require('http').createServer(app).listen(8001);

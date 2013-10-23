@@ -1,0 +1,13 @@
+<div>
+    <h4>All Members</h4>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Completed Shopping</th>
+        </tr>
+        <tr ng-repeat="member in members" ng-class="{'is-active' : member.isActive}">
+            <td>{{member.firstName}} {{member.lastName}}</td>
+            <td>{{member.finishedShopping}}</td>
+        </tr>
+    </table>
+</div>

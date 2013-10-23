@@ -1,6 +1,8 @@
 (function() {
 
-var module = angular.module('common.charts', []);
+    var module = angular.module('common.charts', [
+        'lib.lodash'
+    ]);
 
     module.controller('pieChartCtrl', function($scope) {
         $scope.pieChart = {
@@ -77,6 +79,25 @@ var module = angular.module('common.charts', []);
                     }
                 });
             }
+        }
+    });
+
+    module.controller('memberListCtrl', ['$scope', '_', function($scope, _) {
+        _.each($scope.members, function(member) {
+            member.isActive = false;
+        });
+    }]);
+
+    module.directive('memberList', function() {
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude: false,
+            scope: {
+                members: '='
+            },
+            controller: 'memberListCtrl',
+            templateUrl: 'partials/memberList.html'
         }
     });
 
