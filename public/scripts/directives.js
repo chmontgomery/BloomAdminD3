@@ -80,7 +80,7 @@
                     }
                 });
             }
-        }
+        };
     });
 
     module.controller('memberListCtrl', ['$scope', '_', function($scope, _) {
@@ -99,7 +99,7 @@
             },
             controller: 'memberListCtrl',
             templateUrl: 'partials/memberList.html'
-        }
+        };
     });
 
 })();
