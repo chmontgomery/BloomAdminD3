@@ -11,11 +11,10 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'app/bower_components/angular/angular.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/scripts/*.js',
-      'app/scripts/**/*.js',
-      'test/mock/**/*.js',
+      'public/bower_components/angular/angular.js',
+      'public/bower_components/angular-mocks/angular-mocks.js',
+      'public/scripts/*.js',
+      'public/scripts/**/*.js',
       'test/spec/**/*.js'
     ],
 
@@ -42,7 +41,7 @@ module.exports = function(config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['Chrome'],
+    browsers: ['Chrome', 'Firefox'],
 
 
     // Continuous Integration mode

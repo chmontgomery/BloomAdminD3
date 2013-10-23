@@ -1,12 +1,16 @@
 module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-karma');
 
     grunt.initConfig({
         src: {
             js: ['public/scripts/**/*.js']
         },
+        test: {
+            js: ['test/spec/**/*.js']
+        },
         jshint: {
-            files:['Gruntfile.js', '<%= src.js %>'],
+            files:['Gruntfile.js', '<%= src.js %>', '<%= test.js %>'],
             options: {
                 curly: true,
                 eqeqeq: true,
@@ -25,10 +29,17 @@ module.exports = function (grunt) {
                     console: true
                 }
             }
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js',
+                singleRun: true
+            }
         }
     });
 
     grunt.registerTask('test', [
+        'karma',
         'jshint'
     ]);
 };
