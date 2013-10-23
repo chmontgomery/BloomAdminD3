@@ -1,6 +1,7 @@
 (function() {
+    'use strict';
 
-    var module = angular.module('common.charts', [
+    var module = angular.module('BloomAdminD3App.directives', [
         'lib.lodash'
     ]);
 

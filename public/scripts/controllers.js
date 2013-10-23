@@ -1,7 +1,9 @@
-'use strict';
+(function() {
+    'use strict';
 
-angular.module('BloomAdminD3App')
-    .controller('MainCtrl', function ($scope, $http) {
+    var module = angular.module('BloomAdminD3App.controllers', []);
+
+    module.controller('MainCtrl', function ($scope, $http) {
         $scope.planYear = 2013;
         $scope.havePurchaseStats = null;
         $scope.members = [];
@@ -14,3 +16,4 @@ angular.module('BloomAdminD3App')
             $scope.members = data;
         });
     });
+})();
