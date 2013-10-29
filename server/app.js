@@ -1,7 +1,9 @@
 var express = require('express'),
     path = require('path'),
+    http = require('http'),
     _ = require('lodash-node'),
     app = express(),
+    mockData = require('./testData.js'),
     socket;
 
 app.configure(function() {
@@ -13,75 +15,38 @@ app.configure(function() {
 
     app.use(express.bodyParser());
 
-    var members = [
-        {
-            id: '12345',
-            firstName: 'Chris',
-            lastName: 'Montgomery',
-            purchases: [{
-                planYear: '2013',
-                product: 'Waived Medical Insurance',
-                status: 'Member Denied-Cancelled',
-                effectiveDate: '2013-09-01'
-            }]
-        },
-        {
-            id: '12347',
-            firstName: 'Phil',
-            lastName: 'CreamCheese',
-            purchases: [{
-                planYear: '2013',
-                product: 'Super Medical Insurance',
-                status: 'Approved',
-                effectiveDate: '2013-09-01'
-            },{
-                planYear: '2013',
-                product: 'Gold Tooth',
-                status: 'Approved',
-                effectiveDate: '2013-09-01'
-            }]
-        },
-        {
-            id: '12346',
-            firstName: 'Brooks',
-            lastName: 'West',
-            purchases: []
-        }
-    ];
-
     app.get('/havePurchase/:planYear', function(req, res) {
-        var planYear = req.params.planYear;
+        //var planYear = req.params.planYear;
+
+        var planYearBloomId = "696EC308119A11E1942912313F047E54";
+
+        var members = mockData.getMedicaMembers();
+
+        _.each(members, function(member) {
+            if (!(Math.floor(Math.random() * 3))) {
+                member.purchases = mockData.getMockPurchases();
+            }
+        });
 
         var total = members.length;
         var membersWhoMadePurchases = _.filter(members, function(member) {
-            return _.filter(member.purchases, function(purchase) {
-                return purchase.planYear === planYear;
-            }).length > 0;
+            return member.purchases && member.purchases.length > 0;
         });
         var data = [{
-            type: 'yes',
+            type: 'Yes',
             population: membersWhoMadePurchases.length/total
         }, {
-            type: 'no',
+            type: 'No',
             population: (total - membersWhoMadePurchases.length)/total
         }];
+
+        console.log('returning json');
+
         res.json(data);
     });
 
     app.get('/members', function(req, res) {
-        //TODO
-        var members = [{
-            firstName: 'Chris',
-            lastName: 'Montgomery',
-            bloomId: '12345',
-            finishedShopping: false
-        },{
-            firstName: 'Adan',
-            lastName: 'Perez',
-            bloomId: '65453',
-            finishedShopping: true
-        }];
-        res.json(members);
+        res.json(mockData.getMedicaMembers());
     });
 });
 
@@ -89,11 +54,21 @@ var server = require('http').createServer(app).listen(8001);
 
 var io = require('socket.io').listen(server);
 
+var consumerUrl = 'https://vagrant.moolb.com';
+var io_consumer = require('socket.io').listen(consumerUrl);
+
 // Reduce the logging output of Socket.IO
 io.set('log level', 1);
+io_consumer.set('log level', 1);
 
 io.sockets.on('connection', function (aSocket) {
     socket = aSocket;
     console.log('a client connected');
+    socket.emit('connected', { message: "You are connected!" });
+});
+
+io_consumer.sockets.on('connection', function (aSocket) {
+    socket = aSocket;
+    console.log('a consumer client connected');
     socket.emit('connected', { message: "You are connected!" });
 });

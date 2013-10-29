@@ -6,6 +6,9 @@
     ]);
 
     module.controller('pieChartCtrl', function($scope) {
+        $scope.roundPopForDisplay = function(num) {
+            return Math.round((num * 100) * 100) / 100
+        };
         $scope.pieChart = {
             initialize: function(datajson) {
                 this.datajson = datajson;
@@ -51,7 +54,7 @@
                         .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
                         .attr("dy", ".35em")
                         .style("text-anchor", "middle")
-                        .text(function(d) { return d.data.type; });
+                        .text(function(d) { return $scope.roundPopForDisplay(d.data.population) + "% " + d.data.type; });
             }
         };
     });

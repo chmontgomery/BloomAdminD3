@@ -1,20 +1,21 @@
 {
-  "name": "BloomAdminD3",
-  "version": "0.0.0",
-  "dependencies": {
-    "angular": "~1.0.7",
-    "json3": "~3.2.4",
-    "jquery": "~1.9.1",
-    "bootstrap-sass": "~2.3.1",
-    "es5-shim": "~2.0.8",
-    "angular-resource": "~1.0.7",
-    "angular-cookies": "~1.0.7",
-    "angular-sanitize": "~1.0.7",
-    "d3": "~3.3.8",
-    "lodash": "~2.2.1"
-  },
-  "devDependencies": {
-    "angular-mocks": "~1.0.7",
-    "angular-scenario": "~1.0.7"
-  }
+    "name": "BloomAdminD3",
+    "version": "0.0.0",
+    "dependencies": {
+        "angular": "~1.0.7",
+        "json3": "~3.2.4",
+        "jquery": "~1.9.1",
+        "bootstrap-sass": "~2.3.1",
+        "es5-shim": "~2.0.8",
+        "angular-resource": "~1.0.7",
+        "angular-cookies": "~1.0.7",
+        "angular-sanitize": "~1.0.7",
+        "d3": "~3.3.8",
+        "lodash": "~2.2.1",
+        "n3-charts": "git://github.com/n3-charts/line-chart.git"
+    },
+    "devDependencies": {
+        "angular-mocks": "~1.0.7",
+        "angular-scenario": "~1.0.7"
+    }
 }
