@@ -7,7 +7,7 @@
 
     module.controller('pieChartCtrl', function($scope) {
         $scope.roundPopForDisplay = function(num) {
-            return Math.round((num * 100) * 100) / 100
+            return Math.round((num * 100) * 100) / 100;
         };
         $scope.pieChart = {
             initialize: function(datajson) {

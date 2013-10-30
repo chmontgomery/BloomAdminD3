@@ -6,7 +6,6 @@ var express = require('express'),
     q = require('q'), // promises library
     _ = require('lodash-node'),
     app = express(),
-    mockData = require('./testData.js'),
     socket;
 
 app.configure(function() {
@@ -59,9 +58,9 @@ app.configure(function() {
         readConfig('members_employer').then(function(data) {
             return getData(data, employerId);
         }).then(function(members) {
-            console.log("returning", members.length, "members for employer id", employerId);
-            res.json(members);
-        }).fail(function(error) {
+                console.log("returning", members.length, "members for employer id", employerId);
+                res.json(members);
+            }).fail(function(error) {
                 console.log('ERROR getting members: ', error);
             });
     });
@@ -72,26 +71,42 @@ app.configure(function() {
         readConfig('purchases_employer').then(function(data) {
             return getData(data, employerId);
         }).then(function(purchases) {
-            console.log("returning", purchases.length, "purchases for employer id", employerId);
-            res.json(purchases);
-        }).fail(function(error) {
-            console.log('ERROR getting purchases: ', error);
-        });
+                console.log("returning", purchases.length, "purchases for employer id", employerId);
+                res.json(purchases);
+            }).fail(function(error) {
+                console.log('ERROR getting purchases: ', error);
+            });
+    });
 
+    app.get('/completedPurchases/:employerId', function(req, res) {
+        var employerId = req.params.employerId;
 
-        /*var total = members.length;
-        var membersWhoMadePurchases = _.filter(members, function(member) {
-            return member.purchases && member.purchases.length > 0;
-        });
-        var data = [{
-            type: 'Yes',
-            population: membersWhoMadePurchases.length/total
-        }, {
-            type: 'No',
-            population: (total - membersWhoMadePurchases.length)/total
-        }];
-
-        res.json(data);*/
+        q.all([
+                readConfig('purchases_employer').then(function(data) {
+                    return getData(data, employerId);
+                })
+                ,readConfig('members_employer').then(function(data) {
+                    return getData(data, employerId);
+                })
+            ])
+            .spread(function (purchases, members) {
+                _.each(members, function(m) {
+                    m.purchases = _.filter(purchases, function(p) {
+                        return p.memberBloomId === m.bloomId;
+                    })
+                });
+                var membersWhoMadePurchases = _.filter(members, function(m) {
+                    return m.purchases && m.purchases.length > 0;
+                });
+                var data = [{
+                    type: 'Yes',
+                    population: membersWhoMadePurchases.length/members.length
+                }, {
+                    type: 'No',
+                    population: (members.length - membersWhoMadePurchases.length)/members.length
+                }];
+                res.json(data);
+            });
     });
 
     app.get('/employers', function(req, res) {

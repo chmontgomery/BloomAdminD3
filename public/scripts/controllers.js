@@ -12,11 +12,14 @@
 
         $scope.loadEmployerStats = function() {
             if ($scope.selectedEmployer) {
-                $http.get('/members/' + $scope.selectedEmployer.id).success(function(data) {
+                /*$http.get('/members/' + $scope.selectedEmployer.id).success(function(data) {
                     $scope.members = data;
                 });
                 $http.get('/purchases/' + $scope.selectedEmployer.id).success(function(data) {
                     $scope.purchases = data;
+                });*/
+                $http.get('/completedPurchases/' + $scope.selectedEmployer.id).success(function(data) {
+                    $scope.havePurchaseStats = data;
                 });
             }
         };

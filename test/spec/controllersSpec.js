@@ -11,24 +11,12 @@
             $httpBackend,
             $controller;
 
-        var mockHavePurchaseData = [{
-            type: 'yes',
-            population: 2
-        }, {
-            type: 'no',
-            population: 3
-        }];
-
-        var mockMembers = [{
-            firstName: 'Chris',
-            lastName: 'Montgomery',
-            bloomId: '12345',
-            finishedShopping: false
+        var mockEmployers = [{
+            name: 'Bloom',
+            id: '12345'
         },{
-            firstName: 'Adan',
-            lastName: 'Perez',
-            bloomId: '65453',
-            finishedShopping: true
+            name: 'Pontiac',
+            id: '65453'
         }];
 
         // Initialize the controller and a mock scope
@@ -39,14 +27,12 @@
         }));
 
         it('should init and call 2 services', function () {
-            $httpBackend.expectGET('/havePurchase/2013').respond(mockHavePurchaseData);
-            $httpBackend.expectGET('/members').respond(mockMembers);
+            $httpBackend.expectGET('/employers').respond(mockEmployers);
             MainCtrl = $controller('MainCtrl', {
                 $scope: $scope
             });
             $httpBackend.flush();
-            expect($scope.members).toBe(mockMembers);
-            expect($scope.havePurchaseStats).toBe(mockHavePurchaseData);
+            expect($scope.employers).toBe(mockEmployers);
         });
     });
 })();
