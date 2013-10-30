@@ -1,0 +1,16 @@
+{
+    "endpoints": {
+        "members_employer": {
+            "protocol": "http:",
+            "hostname": "vagrant.moolb.com",
+            "port": 8092,
+            "path": "/members/employer/{employerId}"
+        },
+        "purchases_employer": {
+            "protocol": "http:",
+            "hostname": "vagrant.moolb.com",
+            "port": 8092,
+            "path": "/members/employer/{employerId}/purchases"
+        }
+    }
+}

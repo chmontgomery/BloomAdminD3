@@ -7,13 +7,23 @@
         $scope.planYear = 2013;
         $scope.havePurchaseStats = null;
         $scope.members = [];
+        $scope.selectedEmployer = null;
+        $scope.employers = [];
+
+        $scope.loadMembersForEmployer = function() {
+            if ($scope.selectedEmployer) {
+                $http.get('/members/' + $scope.selectedEmployer.id).success(function(data) {
+                    $scope.members = data;
+                });
+            }
+        };
 
         $http.get('/havePurchase/' + $scope.planYear.toString()).success(function(data) {
             $scope.havePurchaseStats = data;
         });
 
-        $http.get('/members').success(function(data) {
-            $scope.members = data;
+        $http.get('/employers').success(function(data) {
+            $scope.employers = data;
         });
     });
 })();

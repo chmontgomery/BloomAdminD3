@@ -1,7 +1,9 @@
 {
   "name": "bloomadmind3",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "q": "~0.9.7"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-copy": "~0.4.1",

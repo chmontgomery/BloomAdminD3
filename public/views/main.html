@@ -1,5 +1,14 @@
 <div class="hero-unit">
-    <h1>{{ planYear }} Stats</h1>
+    <h1>Employer Stats</h1>
+
+    <h4>Choose Employer</h4>
+    <select ng-model="selectedEmployer" ng-options="e.name for e in employers">
+        <option value="">-- choose employer --</option>
+    </select>
+    <div>
+        <button type="button" class="btn btn-primary" ng-click="loadMembersForEmployer()">Load Employer Data</button>
+    </div>
+
     <h4>Members who finished shopping</h4>
     <div>
         <piechart id="d3pie"
