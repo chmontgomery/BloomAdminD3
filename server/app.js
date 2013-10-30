@@ -18,34 +18,6 @@ app.configure(function() {
 
     app.use(express.bodyParser());
 
-    app.get('/havePurchase/:planYear', function(req, res) {
-        //var planYear = req.params.planYear;
-
-        var planYearBloomId = "696EC308119A11E1942912313F047E54";
-
-        var members = mockData.getMedicaMembers();
-
-        _.each(members, function(member) {
-            if (!(Math.floor(Math.random() * 3))) {
-                member.purchases = mockData.getMockPurchases();
-            }
-        });
-
-        var total = members.length;
-        var membersWhoMadePurchases = _.filter(members, function(member) {
-            return member.purchases && member.purchases.length > 0;
-        });
-        var data = [{
-            type: 'Yes',
-            population: membersWhoMadePurchases.length/total
-        }, {
-            type: 'No',
-            population: (total - membersWhoMadePurchases.length)/total
-        }];
-
-        res.json(data);
-    });
-
     function readConfig(endpoint) {
         var configFile = 'config.json',
             deferred = q.defer();
@@ -59,7 +31,7 @@ app.configure(function() {
         return deferred.promise;
     }
 
-    function getMembers(options, employerId) {
+    function getData(options, employerId) {
         var deferred = q.defer();
         options.path = options.path.replace('{employerId}', employerId);
         http.get(options, function(res) {
@@ -85,13 +57,41 @@ app.configure(function() {
     app.get('/members/:employerId', function(req, res) {
         var employerId = req.params.employerId;
         readConfig('members_employer').then(function(data) {
-            return getMembers(data, employerId);
+            return getData(data, employerId);
         }).then(function(members) {
             console.log("returning", members.length, "members for employer id", employerId);
             res.json(members);
         }).fail(function(error) {
                 console.log('ERROR getting members: ', error);
             });
+    });
+
+    app.get('/purchases/:employerId', function(req, res) {
+        var employerId = req.params.employerId;
+
+        readConfig('purchases_employer').then(function(data) {
+            return getData(data, employerId);
+        }).then(function(purchases) {
+            console.log("returning", purchases.length, "purchases for employer id", employerId);
+            res.json(purchases);
+        }).fail(function(error) {
+            console.log('ERROR getting purchases: ', error);
+        });
+
+
+        /*var total = members.length;
+        var membersWhoMadePurchases = _.filter(members, function(member) {
+            return member.purchases && member.purchases.length > 0;
+        });
+        var data = [{
+            type: 'Yes',
+            population: membersWhoMadePurchases.length/total
+        }, {
+            type: 'No',
+            population: (total - membersWhoMadePurchases.length)/total
+        }];
+
+        res.json(data);*/
     });
 
     app.get('/employers', function(req, res) {
