@@ -6,29 +6,32 @@
         <option value="">-- choose employer --</option>
     </select>
     <div>
-        <button type="button" class="btn btn-primary" ng-click="loadEmployerStats()">Load Employer Data</button>
+        <button type="button" class="btn btn-primary" ng-click="loadEmployerStats()">{{ loadButtonText() }}</button>
     </div>
 
-    <h4>Members who finished shopping</h4>
-    <div>
-        <piechart id="d3pie"
-                  data="havePurchaseStats"
+    <div ng-show="completedPurchases">
+        <h4>Members who finished shopping</h4>
+        <piechart id="completedPurchases"
+                  data="completedPurchases"
                   width="300"
                   height="300"></piechart>
     </div>
 
-    <!--<div>
-        <h4>Purchases ({{ purchases.length }})</h4>
-        <table ng-show="purchases.length > 0">
+    <!--<h4>What members purchased</h4>
+    <div>
+        <h4>results ({{ purchaseNames.length }})</h4>
+        <table ng-show="purchaseNames.length > 0">
             <tr>
                 <th>Product Name</th>
-                <th>member BloomId</th>
+                <th>Product type</th>
                 <th>BloomId</th>
+                <th>count</th>
             </tr>
-            <tr ng-repeat="purchase in purchases">
+            <tr ng-repeat="purchase in purchaseNames">
                 <td>{{purchase.productName}}</td>
-                <td>{{purchase.memberBloomId}}</td>
+                <td>{{purchase.productType}}</td>
                 <td>{{purchase.bloomId}}</td>
+                <td>{{purchase.count}}</td>
             </tr>
         </table>
     </div>-->

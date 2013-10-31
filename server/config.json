@@ -4,13 +4,15 @@
             "protocol": "http:",
             "hostname": "vagrant.moolb.com",
             "port": 8092,
-            "path": "/members/employer/{employerId}"
+            "path": "/members/employer/{employerId}",
+            "timeout": 4000
         },
         "purchases_employer": {
             "protocol": "http:",
             "hostname": "vagrant.moolb.com",
             "port": 8092,
-            "path": "/members/employer/{employerId}/purchases"
+            "path": "/members/employer/{employerId}/purchases",
+            "timeout": 4000
         }
     }
 }

@@ -61,7 +61,8 @@ app.configure(function() {
                 console.log("returning", members.length, "members for employer id", employerId);
                 res.json(members);
             }).fail(function(error) {
-                console.log('ERROR getting members: ', error);
+                console.log('ERROR /members/:employerId: ', error);
+                res.status(500).send('Internal Server Error');
             });
     });
 
@@ -74,7 +75,8 @@ app.configure(function() {
                 console.log("returning", purchases.length, "purchases for employer id", employerId);
                 res.json(purchases);
             }).fail(function(error) {
-                console.log('ERROR getting purchases: ', error);
+                console.log('ERROR /purchases/:employerId: ', error);
+                res.status(500).send('Internal Server Error');
             });
     });
 
@@ -90,6 +92,7 @@ app.configure(function() {
                 })
             ])
             .spread(function (purchases, members) {
+                console.log("found", purchases.length, "purchases and", members.length, "members for employer", employerId);
                 _.each(members, function(m) {
                     m.purchases = _.filter(purchases, function(p) {
                         return p.memberBloomId === m.bloomId;
@@ -106,8 +109,48 @@ app.configure(function() {
                     population: (members.length - membersWhoMadePurchases.length)/members.length
                 }];
                 res.json(data);
+            }).fail(function(error) {
+                console.log('ERROR /completedPurchases/:employerId: ', error);
+                res.status(500).send('Internal Server Error');
             });
     });
+
+    /*app.get('/purchaseNames/:employerId', function(req, res) {
+        var employerId = req.params.employerId;
+
+        q.all([
+                readConfig('purchases_employer').then(function(data) {
+                    return getData(data, employerId);
+                })
+                ,readConfig('members_employer').then(function(data) {
+                    return getData(data, employerId);
+                })
+            ])
+            .spread(function (purchases, members) {
+
+                console.log(purchases[0]);
+
+                var purchaseCount = [];
+
+                _.each(purchases, function(p) {
+                    var counted = _.find(purchaseCount, function(pc) {
+                        return p.productBloomId === pc.productBloomId;
+                    });
+                    if (counted) {
+                        counted.count = counted.count++;
+                    } else {
+                        purchaseCount.push({
+                            productBloomId: p.productBloomId,
+                            productName: p.productName,
+                            productType: p.productType,
+                            count: 1
+                        })
+                    }
+                });
+
+                res.json(purchaseCount);
+            });
+    });*/
 
     app.get('/employers', function(req, res) {
         // TODO service call for this data
