@@ -9,53 +9,63 @@
         $scope.roundPopForDisplay = function(num) {
             return Math.round((num * 100) * 100) / 100;
         };
-        $scope.pieChart = {
-            initialize: function(datajson) {
-                this.datajson = datajson;
-            },
-            workOnElement: function(element) {
-                this.element = element;
-            },
-            generateGraph: function() {
-                var radius = Math.min($scope.width, $scope.height) / 2;
 
-                var color = d3.scale.ordinal()
-                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+        var pie, arc, svg, path, _current;
 
-                var arc = d3.svg.arc()
-                    .outerRadius(radius - 10)
-                    .innerRadius(0);
+        $scope.colors = d3.scale.category20();
 
-                var pie = d3.layout.pie()
-                    .sort(null)
-                    .value(function(d) { return d.population; });
+        $scope.radius = function() {
+            return Math.min($scope.width, $scope.height) / 2;
+        };
 
-                var svg = d3.select(this.element).append("svg")
-                    .attr("width", $scope.width)
-                    .attr("height", $scope.height)
-                    .append("g")
-                    .attr("transform", "translate(" + $scope.width / 2 + "," + $scope.height / 2 + ")");
+        $scope.init = function() {
+            pie = d3.layout.pie()
+                .value(function(d) { return d.population; })
+                .sort(null);
 
+            arc = d3.svg.arc()
+                .innerRadius($scope.radius() - 100)
+                .outerRadius($scope.radius() - 20);
 
-                    this.datajson.forEach(function(d) {
-                        d.population = +d.population;
-                    });
+            console.log("div#" + $scope.pieContainerId);
+            svg = d3.select("div#" + $scope.pieContainerId)
+                .append("svg")
+                .attr("width", $scope.width)
+                .attr("height", $scope.height)
+                .append("g")
+                .attr("transform", "translate(" + $scope.width / 2 + "," + $scope.height / 2 + ")");
 
-                    var g = svg.selectAll(".arc")
-                        .data(pie(this.datajson))
-                        .enter().append("g")
-                        .attr("class", "arc");
+            path = svg.data([$scope.data])
+                .selectAll("path")
+                .data(pie)
+                .enter().append("path")
+                .attr("fill", function(d, i) { return $scope.colors(i); })
+                .attr("d", arc)
+                .each(function(d) { _current = d; }); // store the initial angles
 
-                    g.append("path")
-                        .attr("d", arc)
-                        .style("fill", function(d) { return color(d.data.type); });
+            transition();
+        };
 
-                    g.append("text")
-                        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-                        .attr("dy", ".35em")
-                        .style("text-anchor", "middle")
-                        .text(function(d) { return $scope.roundPopForDisplay(d.data.population) + "% " + d.data.type; });
-            }
+        function transition() {
+            path.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+        }
+
+        // Store the displayed angles in _current.
+        // Then, interpolate from _current to the new angles.
+        // During the transition, _current is updated in-place by d3.interpolate.
+        function arcTween(a) {
+            var i = d3.interpolate(_current, a);
+            _current = i(0);
+            return function(t) {
+                return arc(i(t));
+            };
+        }
+
+        $scope.change = function() {
+            path = svg.data([$scope.data])
+                .selectAll("path")
+                .data(pie);
+            transition();
         };
     });
 
@@ -65,6 +75,7 @@
             replace: true,
             transclude: false,
             scope: {
+                pieContainerId: '@',
                 data: '=',
                 width: '=',
                 height: '='
@@ -72,17 +83,16 @@
             controller: 'pieChartCtrl',
             link: function postLink(scope, iElement, iAttrs, controller) {
                 scope.$watch('data', function(newValue, oldValue) {
-                    if (newValue) {
-                        console.log(iAttrs.id + ' data:', scope.data);
-                        var html = "<div id='" + iAttrs.id + "' ></div>"; // the HTML to be produced
-                        var newElem = $(html);
-                        iElement.replaceWith(newElem); // Replacement of the element.
-                        scope.pieChart.initialize(newValue);
-                        scope.pieChart.workOnElement('#'+iAttrs.id);
-                        scope.pieChart.generateGraph();  // generate the actual bar graph
+                    if (newValue && !oldValue) {
+                        //console.log('init data:', scope.data);
+                        scope.init();
+                    } else if (newValue) {
+                        //console.log('change data:', scope.data);
+                        scope.change();
                     }
                 });
-            }
+            },
+            templateUrl: 'partials/piechart.html'
         };
     });
 

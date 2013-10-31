@@ -2,19 +2,19 @@
     <h1>Employer Stats</h1>
 
     <h4>Choose Employer</h4>
-    <select ng-model="selectedEmployer" ng-options="e.name for e in employers">
-        <option value="">-- choose employer --</option>
-    </select>
-    <div>
+    <div class="controls">
+        <select ng-model="selectedEmployer" ng-options="e.name for e in employers">
+            <option value="">-- choose employer --</option>
+        </select>
         <button type="button" class="btn btn-primary" ng-click="loadEmployerStats()">{{ loadButtonText() }}</button>
     </div>
 
     <div ng-show="completedPurchases">
         <h4>Members who finished shopping</h4>
-        <piechart id="completedPurchases"
+        <piechart pie-container-id="completedPurchases"
                   data="completedPurchases"
-                  width="300"
-                  height="300"></piechart>
+                  width="500"
+                  height="500"></piechart>
     </div>
 
     <!--<h4>What members purchased</h4>

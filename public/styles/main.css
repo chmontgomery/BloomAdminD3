@@ -24,3 +24,7 @@ body {
 .is-active {
     color: green;
 }
+
+.controls select {
+    margin-bottom: 0;
+}
