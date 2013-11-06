@@ -27,7 +27,6 @@
                 .innerRadius($scope.radius() - 100)
                 .outerRadius($scope.radius() - 20);
 
-            console.log("div#" + $scope.pieContainerId);
             svg = d3.select("div#" + $scope.pieContainerId)
                 .append("svg")
                 .attr("width", $scope.width)
@@ -66,6 +65,11 @@
                 .selectAll("path")
                 .data(pie);
             transition();
+        };
+
+        $scope.legendCircleCss = function(i) {
+            var color = $scope.colors(i);
+            return 'background-image: -webkit-radial-gradient(-45px 45px, circle cover, ' + color + ', ' + color + ');';
         };
     });
 

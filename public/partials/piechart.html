@@ -1,6 +1,6 @@
 <div>
     <div ng-repeat="d in data">
-        {{ d.type }}: {{ roundPopForDisplay(d.population) }}%
+        <span class="circle" style="{{ legendCircleCss($index) }}"></span>{{ d.type }}: {{ roundPopForDisplay(d.population) }}%
     </div>
     <div id="{{ pieContainerId }}"></div>
 </div>
