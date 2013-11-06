@@ -44,15 +44,17 @@ body {
     float: right;
 }
 
-.bar-chart rect {
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.bar {
     fill: #1f77b4;
 }
 
-.bar-chart text.bar-text {
-    fill: white;
-    text-anchor: end;
-}
-
-.bar-chart text.bar-label {
-    fill: #333;
+.x.axis path {
+    display: none;
 }
