@@ -10,6 +10,21 @@
         $scope.selectedEmployer = null;
         $scope.employers = [];
         $scope.purchases = [];
+        $scope.viewType = {
+            PIE: 'PIE',
+            BAR: 'BAR'
+        };
+        $scope.viewDrop = [{
+            type: $scope.viewType.PIE,
+            label: 'pie chart'
+        },{
+            type: $scope.viewType.BAR,
+            label: 'bar graph'
+        }];
+        $scope.selectedView = $scope.viewDrop[0];
+        $scope.showViewWhen = function(type) {
+            return $scope.selectedView.type === type;
+        };
         $scope.loadingData = false;
         $scope.loadButtonText = function() {
             if ($scope.loadingData) {

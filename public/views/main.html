@@ -11,10 +11,21 @@
 
     <div ng-show="completedPurchases">
         <h4>Members who finished shopping</h4>
-        <piechart pie-container-id="completedPurchases"
-                  data="completedPurchases"
-                  width="500"
-                  height="500"></piechart>
+        <div class="view-toggle">
+            <select ng-model="selectedView" ng-options="v.label for v in viewDrop"></select>
+        </div>
+        <div ng-show="showViewWhen(viewType.PIE)">
+            <piechart pie-container-id="completedPurchases_pie"
+                      data="completedPurchases"
+                      width="500"
+                      height="500"></piechart>
+        </div>
+        <div ng-show="showViewWhen(viewType.BAR)">
+            <bargraph bar-container-id="completedPurchases_bar"
+                      data="completedPurchases"
+                      width="500"
+                      height="200"></bargraph>
+        </div>
     </div>
 
     <!--<h4>What members purchased</h4>

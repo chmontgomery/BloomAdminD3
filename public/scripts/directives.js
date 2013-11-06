@@ -100,6 +100,80 @@
         };
     });
 
+    module.controller('barChartCtrl', function($scope) {
+
+        // TODO reuse with above
+        $scope.roundPopForDisplay = function(num) {
+            return Math.round((num * 100) * 100) / 100;
+        };
+
+        var barHeight, x, chart, bar;
+
+        $scope.init = function() {
+            barHeight = $scope.height / $scope.data.length;
+
+            x = d3.scale.linear()
+                .domain([0, d3.max($scope.data, function(d) { return d.population; })])
+                .range([0, $scope.width]);
+
+            chart = d3.select("div#" + $scope.barContainerId + " .bar-chart")
+                .attr("width", $scope.width)
+                .attr("height", barHeight * $scope.data.length);
+
+            bar = chart.selectAll("g")
+                .data($scope.data)
+                .enter().append("g")
+                .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+            bar.append("rect")
+                .attr("width", function(d) { return x(d.population); })
+                .attr("height", barHeight - 1);
+
+            bar.append("text")
+                .attr("class", "bar-text")
+                .attr("x", function(d) { return x(d.population) - 3; })
+                .attr("y", barHeight / 2)
+                .attr("dy", ".35em")
+                .text(function(d) { return $scope.roundPopForDisplay(d.population) + "%"; });
+
+            bar.append("text")
+                .attr("class", "bar-label")
+                .attr("x", 3)
+                .attr("y", barHeight / 2)
+                .attr("dy", ".35em")
+                .text(function(d) { return d.type; });
+        };
+
+        $scope.change = function() {
+
+        };
+    });
+
+    module.directive('bargraph', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude: false,
+            scope: {
+                barContainerId: '@',
+                data: '=',
+                width: '=',
+                height: '='
+            },
+            controller: 'barChartCtrl',
+            link: function postLink(scope, iElement, iAttrs, controller) {
+                scope.$watch('data', function(newValue, oldValue) {
+                    if (newValue && !oldValue) {
+                        scope.init();
+                    } else if (newValue) {
+                        scope.change();
+                    }
+                });
+            },
+            templateUrl: 'partials/bargraph.html'
+        };
+    });
+
     module.controller('memberListCtrl', ['$scope', '_', function($scope, _) {
         _.each($scope.members, function(member) {
             member.isActive = false;
