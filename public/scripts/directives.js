@@ -100,11 +100,6 @@
 
     module.controller('barChartCtrl', function($scope) {
 
-        // TODO reuse with above
-        $scope.roundPopForDisplay = function(num) {
-            return Math.round((num * 100) * 100) / 100;
-        };
-
         var margin, height, width, x, y, xAxis, yAxis, svg, formatPercent, color;
 
         $scope.init = function() {
@@ -124,7 +119,7 @@
             d3.select("div#" + $scope.barContainerId + " svg").remove();
 
             x = d3.scale.ordinal()
-                .rangeRoundBands([0, width], .1);
+                .rangeRoundBands([0, width], 0.1);
 
             y = d3.scale.linear()
                 .range([$scope.height, 0]);
@@ -160,7 +155,7 @@
                 .attr("transform", "rotate(-90)")
                 .attr("y", 6)
                 .attr("dy", ".71em")
-                .style("text-anchor", "end")
+                .style("text-anchor", "end");
 
             svg.selectAll(".bar")
                 .data($scope.data)

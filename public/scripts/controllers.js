@@ -32,7 +32,7 @@
         $scope.loadingData = false;
         $scope.loadButtonText = function() {
             if ($scope.loadingData) {
-                return 'crunching the data...'
+                return 'crunching the data...';
             }
             return 'Load Employer Data';
         };
