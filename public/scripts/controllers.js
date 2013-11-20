@@ -12,7 +12,8 @@
         $scope.purchases = [];
         $scope.viewType = {
             PIE: 'PIE',
-            BAR: 'BAR'
+            BAR: 'BAR',
+            BUBBLE: 'BUBBLE'
         };
         $scope.viewDrop = [{
             type: $scope.viewType.PIE,
@@ -20,6 +21,9 @@
         },{
             type: $scope.viewType.BAR,
             label: 'bar graph'
+        },{
+            type: $scope.viewType.BUBBLE,
+            label: 'bubble chart'
         }];
         $scope.selectedView = $scope.viewDrop[0];
         $scope.showViewWhen = function(type) {

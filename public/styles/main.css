@@ -51,10 +51,6 @@ body {
     shape-rendering: crispEdges;
 }
 
-.bar {
-    fill: #1f77b4;
-}
-
 .x.axis path {
     display: none;
 }

@@ -26,6 +26,11 @@
                       width="600"
                       height="400"></bargraph>
         </div>
+        <div ng-show="showViewWhen(viewType.BUBBLE)">
+            <bubble-chart bubble-container-id="completedPurchases_bubble"
+                      data="completedPurchases"
+                      diameter="500"></bubble-chart>
+        </div>
     </div>
 
     <!--<h4>What members purchased</h4>

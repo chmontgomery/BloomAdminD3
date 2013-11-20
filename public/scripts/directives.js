@@ -105,7 +105,7 @@
             return Math.round((num * 100) * 100) / 100;
         };
 
-        var margin, height, width, x, y, xAxis, yAxis, svg, formatPercent;
+        var margin, height, width, x, y, xAxis, yAxis, svg, formatPercent, color;
 
         $scope.init = function() {
             margin = {top: 20, right: 20, bottom: 30, left: 50};
@@ -113,6 +113,8 @@
             height = $scope.height - margin.top - margin.bottom;
 
             formatPercent = d3.format(".0%");
+
+            color = d3.scale.category20c();
 
             $scope.change();
         };
@@ -167,7 +169,8 @@
                 .attr("x", function(d) { return x(d.type); })
                 .attr("width", x.rangeBand())
                 .attr("y", function(d) { return y(d.population); })
-                .attr("height", function(d) { return height - y(d.population); });
+                .attr("height", function(d) { return height - y(d.population); })
+                .style("fill", function(d) { return color(d.population); });
         };
     });
 
@@ -193,6 +196,83 @@
                 });
             },
             templateUrl: 'partials/bargraph.html'
+        };
+    });
+
+    module.controller('bubbleChartCtrl', function($scope) {
+
+        var svg, bubble;
+
+        $scope.init = function() {
+            $scope.change();
+        };
+
+        function hack(d) {
+            if (d.type === 'Yes') {
+                return ($scope.diameter/2) + 100;
+            } else {
+                return ($scope.diameter/2) - 100;
+            }
+        }
+
+        $scope.change = function() {
+            var color = d3.scale.category20c();
+
+            bubble = d3.layout.pack()
+                .sort(null)
+                .size([$scope.diameter, $scope.diameter])
+                .padding(1.5);
+
+            d3.select("div#" + $scope.bubbleContainerId + " svg").remove();
+
+            svg = d3.select("div#" + $scope.bubbleContainerId)
+                .append("svg")
+                .attr("width", +$scope.diameter)
+                .attr("height", +$scope.diameter)
+                .attr("class", "bubble");
+
+
+            var node = svg.selectAll(".node")
+                .data($scope.data)
+                .enter().append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) { return "translate(" + ($scope.diameter/2) + "," + hack(d) + ")"; });
+
+            node.append("title")
+                .text(function(d) { return d.type; });
+
+            node.append("circle")
+                .attr("r", function(d) { return d.population * 100; })
+                .style("fill", function(d) { return color(d.population); });
+
+            node.append("text")
+                .attr("dy", ".3em")
+                .style("text-anchor", "middle")
+                .text(function(d) { return d.type; });
+        };
+    });
+
+    module.directive('bubbleChart', function () {
+        return {
+            restrict: 'E',
+            replace: true,
+            transclude: false,
+            scope: {
+                bubbleContainerId: '@',
+                data: '=',
+                diameter: '='
+            },
+            controller: 'bubbleChartCtrl',
+            link: function postLink(scope, iElement, iAttrs, controller) {
+                scope.$watch('data', function(newValue, oldValue) {
+                    if (newValue && !oldValue) {
+                        scope.init();
+                    } else if (newValue) {
+                        scope.change();
+                    }
+                });
+            },
+            templateUrl: 'partials/bubblechart.html'
         };
     });
 
