@@ -198,16 +198,43 @@
 
         var svg, bubble;
 
+        //TODO share via service?
+        $scope.roundPopForDisplay = function(num) {
+            return Math.round((num * 100) * 100) / 100;
+        };
+
         $scope.init = function() {
             $scope.change();
         };
 
         function hack(d) {
             if (d.type === 'Yes') {
-                return ($scope.diameter/2) + 100;
+                return ($scope.diameter/2) + 130;
             } else {
-                return ($scope.diameter/2) - 100;
+                return ($scope.diameter/2) - 130;
             }
+        }
+
+        function animateFirstStep(){
+            d3.select(this)
+                .transition()
+                .delay(0)
+                .duration(1000)
+                .attr("r", function(d) {
+                    return circleRadius(d) / 2;
+                })
+                .each("end", animateSecondStep);
+        }
+
+        function animateSecondStep(){
+            d3.select(this)
+                .transition()
+                .duration(1000)
+                .attr("r", circleRadius);
+        }
+
+        function circleRadius(d) {
+            return d.population * 200;
         }
 
         $scope.change = function() {
@@ -226,7 +253,6 @@
                 .attr("height", +$scope.diameter)
                 .attr("class", "bubble");
 
-
             var node = svg.selectAll(".node")
                 .data($scope.data)
                 .enter().append("g")
@@ -236,9 +262,27 @@
             node.append("title")
                 .text(function(d) { return d.type; });
 
+            var tooltip = d3.select("body")
+                .append("div")
+                .attr("class", "simple-tooltip");
+
             node.append("circle")
-                .attr("r", function(d) { return d.population * 100; })
-                .style("fill", function(d) { return color(d.population); });
+                .attr("r", circleRadius)
+                .style("fill", function(d) { return color(d.population); })
+                .on("mouseover", function(d){
+                    d3.select(this).style("fill", "#faa732");
+                    tooltip.text(d.type + ': ' + $scope.roundPopForDisplay(d.population) + '%');
+                    return tooltip.style("visibility", "visible");
+                })
+                .on("mousemove", function(){
+                    return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");
+                })
+                .on("mouseout", function(d){
+                    d3.select(this).style("fill", color(d.population));
+                    tooltip.text('');
+                    return tooltip.style("visibility", "hidden");
+                })
+                .on("mousedown", animateFirstStep);
 
             node.append("text")
                 .attr("dy", ".3em")
