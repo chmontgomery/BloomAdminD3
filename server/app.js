@@ -166,6 +166,15 @@ app.configure(function() {
         },{
             id: 260,
             name: 'City of Pontiac'
+        },{
+            id: 177,
+            name: 'Mello Smello'
+        },{
+            id: 168,
+            name: 'Michigan Catholic Conference'
+        },{
+            id: 169,
+            name: 'Auto Club Group'
         }]);
     });
 });
